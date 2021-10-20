@@ -1,4 +1,5 @@
-// TODO: implement button to submit search
+// TODO: implement button/press 'enter' to submit search
+// TODO: make search query work from url
 // TODO: implement next 10 button for if search is out of items, go to next 50
 // TODO-possible: add tooltip to warn about making another API call with next10 over 50
 // TODO: show error for API limit
@@ -16,7 +17,7 @@ import './App.css'
 const GIF_URL = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
 
 // use React functional components
-const App = () => {
+const App = (props) => {
   const [input, setInput] = useState("")
   const [results, setResults] = useState([])
   const inputRef = useRef()
@@ -55,14 +56,18 @@ const App = () => {
       </div>
       <div className="Container">
         <div className="InputContainer">
-          <input type="text" 
-                  id="search" 
-                  name="search" 
-                  placeholder="Search..." 
-                  value={input}
-                  onChange={handleChange}
-                  className="SearchBar" 
-                  required />
+          <form onSubmit={() => fetchData(input)}>  
+            <input type="text" 
+                    id="search" 
+                    name="search" 
+                    placeholder="Search..." 
+                    value={input}
+                    onChange={handleChange}
+                    className="SearchBar" 
+                    required />
+            <input type="submit" className="HiddenSubmit" />
+            
+          </form>
         </div>
         <Search results={results} />
       </div>
@@ -81,7 +86,7 @@ const Search = ({ results }) => {
       <ul className="Grid">
         {results.slice(number, number+10).map(result => (
           <li key={result.id} className="Card">
-            <video autoplay="autoplay" loop="loop" >
+            <video autoPlay="autoplay" loop="loop" >
               <source src={result.images.fixed_height.mp4} type="video/mp4" />
             </video>
             <button onClick={() => {navigator.clipboard.writeText(result.url)}}>
@@ -92,8 +97,8 @@ const Search = ({ results }) => {
         )}
       </ul>
       <div className="ButtonContainer">
-        {number >= 10 ? <button className="Button" onClick={() => setNumber(number - 10)}>Previous 10 results</button> : ''}
-        {number < 40 ? <button className="Button" onClick={() => setNumber(number + 10)}>Next 10 results</button> : ''}
+        {number >= 10 ? <button onClick={() => setNumber(number - 10)}>Previous 10 results</button> : ''}
+        {number < 40 ? <button onClick={() => setNumber(number + 10)}>Next 10 results</button> : ''}
       </div>
     </div>
   )

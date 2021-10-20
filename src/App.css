@@ -1,9 +1,11 @@
 .App {
   text-align: center;
+  background-color: #282c34;
+  color: white;
 }
 
 .App-header {
-  background-color: #282c34;
+  background: linear-gradient(45deg, rgba(0,255,61,0.3) 0%, rgba(255,0,202,0.3) 100%);
   min-height: 10vh;
   display: flex;
   flex-direction: column;
@@ -13,10 +15,18 @@
   color: white;
 }
 
+.App-header a:visited {
+  color: rgba(0,255,61,0.7);
+}
+
+.App-header a:hover {
+  color: rgba(255,0,202,0.7);
+}
+
 .Container {
   min-height: 90vh;
   padding: 0 0.5rem;
-  margin: 30px 10vw;
+  margin: 0 10vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,6 +41,10 @@
 
 .SearchBar {
   max-width: 50%;
+}
+
+.HiddenSubmit {
+  display: none;
 }
 
 .ResultsContainer {
@@ -59,14 +73,27 @@
 .Card {
   margin: 1rem;
   padding: 1.5rem;
-  border: 1px solid #eaeaea;
+  border: 1px solid rgba(255,0,202,0.5);
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   width: 45%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  background-color: black;
 }
 
-.Button {
-  width: 200px;
+.Card > button {
+  margin-top: 10px;
+}
+
+button {
+  width: auto;
+  align-self: center;
+  font-size: calc(5px + 1vmin);
+}
+
+.ButtonContainer {
+  padding-bottom: 40px;
 }
