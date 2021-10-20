@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import Search from './components/Search'
+import './App.css'
 
-function App() {
+
+const App = () => {
+  const [searchData, setSearchData] = useState("")
+
+  const handleChange = (event) => {
+    setSearchData(event.target.value)
+  }
+
+// change layout to not include header/body
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <div className="App-header">
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Search <a href="https://giphy.com/">GIPHY</a>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </div>
+      <div className="Container">
+        <div className="InputContainer">
+          <input type="text" 
+                  id="search" 
+                  name="search" 
+                  placeholder="Search..." 
+                  value={searchData}
+                  onChange={handleChange}
+                  size="60" required />
+        </div>
+        <Search searchTerm={searchData} />
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
