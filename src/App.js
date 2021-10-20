@@ -1,34 +1,85 @@
-// TODO: implement button/press 'enter' to submit search
-// TODO: make search query work from url
-// TODO: implement next 10 button for if search is out of items, go to next 50
-// TODO-possible: add tooltip to warn about making another API call with next10 over 50
 // TODO: show error for API limit
-// TODO: implement cache to show previous searches even after API limit reached
-//       |_> may have to list these or store search history to make less API calls
-// TODO: show 3 random gifs before searching
+// TODO: 3 random GIFS must move on first render
 // TODO-styling: Make Cards work correctly in Grid
 // TODO-styling: add some color
 
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import _ from 'lodash'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './App.css'
-
-const GIF_URL = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
+// import SearchPage from './SearchPage'
 
 // use React functional components
-const App = (props) => {
-  const [input, setInput] = useState("")
+const App = () => {
+  // const [previousSearches, setPreviousSearches] = useState([])
+  // console.log("previousSearches", previousSearches)
+  
+  return (
+    <div className="App">
+      <Router>
+        <Route path="/" component={SearchPage} />
+      </Router>
+    </div>
+  )
+}
+
+const GIF_URL = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
+const RANDOM_GIF_URL = `https://api.giphy.com/v1/gifs/random?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
+
+const SearchPage = ({ location }) => {
+  const query = location.search.substring(location.search.indexOf("=") + 1)
+  
+  const [input, setInput] = useState(query)
   const [results, setResults] = useState([])
+  const [history, setHistory] = useState(() => {
+    const saved = sessionStorage.getItem(query)
+    const initialValue = JSON.parse(saved)
+    if (initialValue) setResults(initialValue)
+    return initialValue || ""
+  })
   const inputRef = useRef()
 
+  // fetch search terms asynchronously
+  const fetchData = useCallback(async (input) => {
+    const res = await fetch(`${GIF_URL}&q=${input}`)
+    const json = await res.json()
+
+    setResults(json.data)
+    setHistory(input)
+    sessionStorage.setItem(input, JSON.stringify(json.data))
+  }, [])
+
+  const fetchRandom = async () => {
+    const res1 = await fetch(RANDOM_GIF_URL)
+    const json1 = await res1.json()
+    
+    const res2 = await fetch(RANDOM_GIF_URL)
+    const json2 = await res2.json()
+
+    const res3 = await fetch(RANDOM_GIF_URL)
+    const json3 = await res3.json()
+
+    const randomResults = [json1.data, json2.data, json3.data]
+    setResults(randomResults)
+  }
+
+
+  useEffect(() => {
+    // don't fetch new data if query exists in history
+    if (history !== "") { return }
+    // fetch new data if new query
+    fetchData(query)
+    // fetch random gifs if initial page load
+    if (sessionStorage.length === 0) fetchRandom()
+  }, [fetchData, query, history])
+
   // use debounce to not call API on every key stroke
-  // use useRef to persist same ref object on every render
   // results will show 1 second after user ends typing
   useEffect(() => {
     inputRef.current = _.debounce(fetchData, 1000)
 
-  }, []) // empty array so that this only runs once per render
+  }, [fetchData])
 
 
   // set input to current value in search bar and then set inputRef to the same
@@ -38,17 +89,8 @@ const App = (props) => {
     inputRef.current(input)
   }
 
-  // fetch search terms asynchronously
-  const fetchData = async (input) => {
-    const res = await fetch(`${GIF_URL}&q=${input}`)
-    const json = await res.json()
-
-    setResults(json.data)
-  }
-
-
   return (
-    <div className="App">
+    <>
       <div className="App-header">
         <p>
           Search <a href="https://giphy.com/">GIPHY</a>
@@ -65,13 +107,13 @@ const App = (props) => {
                     onChange={handleChange}
                     className="SearchBar" 
                     required />
+            <label htmlFor="search">Press enter to Search or wait 1 second for results to show up automatically</label>
             <input type="submit" className="HiddenSubmit" />
-            
           </form>
         </div>
         <Search results={results} />
       </div>
-    </div>
+    </>
   )
 }
 

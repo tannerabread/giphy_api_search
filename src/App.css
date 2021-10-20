@@ -39,8 +39,19 @@
   width: 100%;
 }
 
+.InputContainer > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.InputContainer > form > label {
+  font-size: calc(5px + 1vmin);
+}
+
 .SearchBar {
-  max-width: 50%;
+  width: 50%;
+  align-self: center;
 }
 
 .HiddenSubmit {
