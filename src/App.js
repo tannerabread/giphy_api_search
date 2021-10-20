@@ -1,5 +1,4 @@
 // TODO: show error for API limit
-// TODO: 3 random GIFS must move on first render
 // TODO-styling: Make Cards work correctly in Grid
 // TODO-styling: add some color
 
@@ -8,12 +7,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import _ from 'lodash'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './App.css'
-// import SearchPage from './SearchPage'
 
-// use React functional components
+
 const App = () => {
-  // const [previousSearches, setPreviousSearches] = useState([])
-  // console.log("previousSearches", previousSearches)
   
   return (
     <div className="App">
@@ -24,13 +20,15 @@ const App = () => {
   )
 }
 
+
 const GIF_URL = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
 const RANDOM_GIF_URL = `https://api.giphy.com/v1/gifs/random?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
+
 
 const SearchPage = ({ location }) => {
   const query = location.search.substring(location.search.indexOf("=") + 1)
   
-  const [input, setInput] = useState(query)
+  const [input, setInput] = useState(query || '')
   const [results, setResults] = useState([])
   const [history, setHistory] = useState(() => {
     const saved = sessionStorage.getItem(query)
@@ -42,6 +40,17 @@ const SearchPage = ({ location }) => {
 
   // fetch search terms asynchronously
   const fetchData = useCallback(async (input) => {
+    if (!input) {
+      const result = []
+      for (let i=0; i<3; i++) {
+        const res = await fetch(RANDOM_GIF_URL)
+        const json = await res.json()
+        result.push(json.data)
+      }
+      setResults(result)
+      return
+    }
+
     const res = await fetch(`${GIF_URL}&q=${input}`)
     const json = await res.json()
 
@@ -50,29 +59,15 @@ const SearchPage = ({ location }) => {
     sessionStorage.setItem(input, JSON.stringify(json.data))
   }, [])
 
-  const fetchRandom = async () => {
-    const res1 = await fetch(RANDOM_GIF_URL)
-    const json1 = await res1.json()
-    
-    const res2 = await fetch(RANDOM_GIF_URL)
-    const json2 = await res2.json()
-
-    const res3 = await fetch(RANDOM_GIF_URL)
-    const json3 = await res3.json()
-
-    const randomResults = [json1.data, json2.data, json3.data]
-    setResults(randomResults)
-  }
-
-
+  
   useEffect(() => {
     // don't fetch new data if query exists in history
     if (history !== "") { return }
+
     // fetch new data if new query
     fetchData(query)
-    // fetch random gifs if initial page load
-    if (sessionStorage.length === 0) fetchRandom()
   }, [fetchData, query, history])
+
 
   // use debounce to not call API on every key stroke
   // results will show 1 second after user ends typing
@@ -116,6 +111,7 @@ const SearchPage = ({ location }) => {
     </>
   )
 }
+
 
 // Search component to abstract away the results display from the main class
 const Search = ({ results }) => {
