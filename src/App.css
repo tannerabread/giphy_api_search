@@ -58,6 +58,40 @@
   display: none;
 }
 
+.dropbtn {
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownList {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  z-index: 1;
+  background-color: #f1f1f1;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdownList button {
+  display: block;
+  text-align: left;
+  padding: 12px 16px;
+  color: black;
+}
+
+.dropdownList button:hover {
+  background-color: #ddd;
+}
+
+.show {
+  display: block;
+}
+
 .ResultsContainer {
   width: 100%;
   display: flex;

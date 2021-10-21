@@ -28,6 +28,7 @@ const SearchPage = ({ location }) => {
   const query = location.search.substring(location.search.indexOf("=") + 1)
   
   const [input, setInput] = useState(query || '')
+  const [requestError, setRequestError] = useState(false)
   const [results, setResults] = useState([])
   const [history, setHistory] = useState(() => {
     const saved = sessionStorage.getItem(query)
@@ -51,6 +52,10 @@ const SearchPage = ({ location }) => {
     }
 
     const res = await fetch(`${GIF_URL}&q=${input}`)
+    if (res.status === 429) {
+      console.error("Too many API requests")
+      setRequestError(true)
+    }
     const json = await res.json()
 
     setResults(json.data)
@@ -65,7 +70,6 @@ const SearchPage = ({ location }) => {
   useEffect(() => {
     // don't fetch new data if query exists in history
     if (history !== "") { return }
-
     // fetch new data if new query
     fetchData(query)
   }, [fetchData, query, history])
@@ -75,7 +79,6 @@ const SearchPage = ({ location }) => {
   // results will show 1 second after user ends typing
   useEffect(() => {
     inputRef.current = _.debounce(fetchData, 1000)
-
   }, [fetchData])
 
 
@@ -107,8 +110,18 @@ const SearchPage = ({ location }) => {
             <label htmlFor="search">Press enter to Search or wait 1 second for results to show up automatically</label>
             <input type="submit" className="HiddenSubmit" />
           </form>
+          <div className="dropdown">
+            <button onClick={() => document.getElementById("dropdownList").classList.toggle("show")} className="dropbtn">Previous Searches ▼</button>
+            <div id="dropdownList" className="dropdownList">
+              {Object.keys(sessionStorage).map((key, i) => (
+                <button key={i} onClick={() => setResults(JSON.parse(sessionStorage.getItem(key)))}>
+                  {key}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-        <Search results={results} />
+        <Search error={requestError} results={results} />
       </div>
     </>
   )
@@ -116,9 +129,11 @@ const SearchPage = ({ location }) => {
 
 
 // Search component to abstract away the results display from the main class
-const Search = ({ results }) => {
+const Search = ({ error, results }) => {
   const [number, setNumber] = useState(0)
 
+  if (error) return <div>Too many API Requests</div>
+  
   if (results.length === 0) return <div>Please enter a search</div>
 
   return (
@@ -133,8 +148,7 @@ const Search = ({ results }) => {
               Click here to copy GIPHY url
             </button>
           </li>
-          )
-        )}
+        ))}
       </ul>
       <div className="ButtonContainer">
         {number >= 10 ? <button onClick={() => setNumber(number - 10)}>Previous 10 results</button> : ''}
