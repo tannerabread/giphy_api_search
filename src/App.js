@@ -2,7 +2,6 @@
 // TODO-styling: Make Cards work correctly in Grid
 // TODO-styling: add some color
 
-
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import _ from 'lodash'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -56,7 +55,10 @@ const SearchPage = ({ location }) => {
 
     setResults(json.data)
     setHistory(input)
-    sessionStorage.setItem(input, JSON.stringify(json.data))
+
+    const saveResult = json.data.map(({ id, url, images: { fixed_height: { mp4 } } }) => 
+                                      ({ id, url, images: { fixed_height: { mp4 } } }))
+    sessionStorage.setItem(input, JSON.stringify(saveResult))
   }, [])
 
   
