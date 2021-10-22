@@ -1,7 +1,3 @@
-// TODO: show error for API limit
-// TODO-styling: Make Cards work correctly in Grid
-// TODO-styling: add some color
-
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import _ from 'lodash'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -61,8 +57,8 @@ const SearchPage = ({ location }) => {
     setResults(json.data)
     setHistory(input)
 
-    const saveResult = json.data.map(({ id, url, images: { fixed_height: { mp4 } } }) => 
-                                      ({ id, url, images: { fixed_height: { mp4 } } }))
+    const saveResult = json.data.map(({ id, url, images: { original_mp4: { mp4 } } }) => 
+                                      ({ id, url, images: { original_mp4: { mp4 } } }))
     sessionStorage.setItem(input, JSON.stringify(saveResult))
   }, [])
 
@@ -106,6 +102,7 @@ const SearchPage = ({ location }) => {
                     value={input}
                     onChange={handleChange}
                     className="SearchBar" 
+                    autoFocus onFocus={e => e.currentTarget.select()}
                     required />
             <label htmlFor="search">Press enter to Search or wait 1 second for results to show up automatically</label>
             <input type="submit" className="HiddenSubmit" />
@@ -114,7 +111,12 @@ const SearchPage = ({ location }) => {
             <button onClick={() => document.getElementById("dropdownList").classList.toggle("show")} className="dropbtn">Previous Searches ▼</button>
             <div id="dropdownList" className="dropdownList">
               {Object.keys(sessionStorage).map((key, i) => (
-                <button key={i} onClick={() => setResults(JSON.parse(sessionStorage.getItem(key)))}>
+                <button key={i} className="listButtons"
+                        onClick={() => {
+                        setInput(key)
+                        setResults(JSON.parse(sessionStorage.getItem(key)))
+                        document.getElementById("dropdownList").classList.toggle("show")
+                        }}>
                   {key}
                 </button>
               ))}
@@ -132,17 +134,21 @@ const SearchPage = ({ location }) => {
 const Search = ({ error, results }) => {
   const [number, setNumber] = useState(0)
 
-  if (error) return <div>Too many API Requests</div>
+  if (error) return <div className="ApiError">Too many API Requests</div>
   
   if (results.length === 0) return <div>Please enter a search</div>
 
   return (
     <div className="ResultsContainer">
+      <div className="TopButtonContainer">
+        {number >= 10 ? <button onClick={() => setNumber(number - 10)}>Previous 10 results</button> : ''}
+        {number < 40 ? <button onClick={() => setNumber(number + 10)}>Next 10 results</button> : ''}
+      </div>
       <ul className="Grid">
         {results.slice(number, number+10).map(result => (
           <li key={result.id} className="Card">
-            <video autoPlay="autoplay" loop="loop" >
-              <source src={result.images.fixed_height.mp4} type="video/mp4" />
+            <video className="Gif" autoPlay="autoplay" loop="loop" >
+              <source src={result.images.original_mp4.mp4} type="video/mp4" />
             </video>
             <button onClick={() => {navigator.clipboard.writeText(result.url)}}>
               Click here to copy GIPHY url
@@ -150,7 +156,7 @@ const Search = ({ error, results }) => {
           </li>
         ))}
       </ul>
-      <div className="ButtonContainer">
+      <div className="BottomButtonContainer">
         {number >= 10 ? <button onClick={() => setNumber(number - 10)}>Previous 10 results</button> : ''}
         {number < 40 ? <button onClick={() => setNumber(number + 10)}>Next 10 results</button> : ''}
       </div>
