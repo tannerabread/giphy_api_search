@@ -147,7 +147,7 @@ const Search = ({ error, results }) => {
       <ul className="Grid">
         {results.slice(number, number+10).map(result => (
           <li key={result.id} className="Card">
-            <video className="Gif" autoPlay loop muted >
+            <video className="Gif" autoPlay loop muted playsInline >
               <source src={result.images.original_mp4.mp4} type="video/mp4" />
             </video>
             <button onClick={() => {navigator.clipboard.writeText(result.url)}}>
