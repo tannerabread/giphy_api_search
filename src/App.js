@@ -134,9 +134,30 @@ const SearchPage = ({ location }) => {
 const Search = ({ error, results }) => {
   const [number, setNumber] = useState(0)
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [number])
+
   if (error) return <div className="ApiError">Too many API Requests</div>
   
   if (results.length === 0) return <div>Please enter a search</div>
+
+  if (results.length === 3) return (
+    <div className="ResultsContainer">
+      <ul className="Grid">
+        {results.map(result => (
+          <li key={result.id} className="Card">
+            <video className="Gif" autoPlay loop muted playsInline >
+              <source src={result.images.original_mp4.mp4} type="video/mp4" />
+            </video>
+            <button onClick={() => {navigator.clipboard.writeText(result.url)}}>
+              Click here to copy GIPHY url
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 
   return (
     <div className="ResultsContainer">
