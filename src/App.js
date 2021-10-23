@@ -104,7 +104,6 @@ const SearchPage = ({ location }) => {
                     className="SearchBar" 
                     autoFocus onFocus={e => e.currentTarget.select()}
                     required />
-            <label htmlFor="search">Press enter to Search or wait 1 second for results to show up automatically</label>
             <input type="submit" className="HiddenSubmit" />
           </form>
           <div className="dropdown">

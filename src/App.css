@@ -1,38 +1,49 @@
+:root {
+  --main: rgba(47,35,89,1);
+  --container: rgba(114,99,166,1);
+  --firstButton: rgba(242,15,75,1);
+  --secondButton: rgba(242,182,182,1);
+  --header1: rgba(22,10,38,1);
+}
+
 .App {
   text-align: center;
-  background: linear-gradient(90deg, rgba(32,43,62,1), rgba(48,62,82,1));
+  background-color: var(--main);
   color: white;
 }
 
 .App-header {
-  background: linear-gradient(45deg, rgba(0,255,61,0.3) 0%, rgba(255,0,202,0.3) 100%);
-  min-height: 10vh;
+  background-color: var(--header1);
+  min-height: 15vh;
   display: flex;
+  font-family: broadacre-regular-0, sans-serif; 
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(10px + 4vmin);
   color: white;
+  box-shadow: rgba(24, 24, 27, 0.57) 7px 8px 17px -2px;
+  z-index: 1;
 }
 
-.App-header a:visited {
-  color: rgba(0,255,61,0.7);
-}
-
-.App-header a:hover {
-  color: rgba(255,0,202,0.7);
+.App-header a:link, .App-header a:visited, .App-header a:hover {
+  background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+  background-clip: text;
+  color: transparent;
+  border-bottom: 2px solid white;
 }
 
 .Container {
   min-height: 90vh;
-  max-width: 90vw;
   padding: 0 0.5rem;
-  margin: 0 10vw;
+  margin: 0 5vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: auto;
+  background-color: var(--container);
+  box-shadow: rgba(24, 24, 27, 0.57) 7px 8px 17px -2px;
 }
 
 .InputContainer {
@@ -54,6 +65,7 @@
 .SearchBar {
   width: 60%;
   align-self: center;
+  margin-bottom: 1rem;
   box-shadow: rgba(24, 24, 27, 0.57) 7px 8px 17px -2px;
 }
 
@@ -64,6 +76,11 @@
 .dropbtn {
   border: none;
   cursor: pointer;
+  font-family: ibm-plex-serif, sans-serif;
+  background-color: var(--header1);
+  color: white;
+  padding: 0.5rem;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .dropdown {
@@ -78,7 +95,7 @@
   max-height: 300px;
   overflow: auto;
   z-index: 1;
-  background-color: #f1f1f1;
+  background-color: var(--secondButton);
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
@@ -87,12 +104,14 @@
   text-align: left;
   padding: 12px 16px;
   color: black;
+  background-color: var(--secondButton);
   border: none;
   width: 100%;
 }
 
 .dropdownList button:hover {
-  background-color: #ddd;
+  background-color: var(--main);
+  color: white;
 }
 
 .show {
@@ -136,7 +155,7 @@
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  background-color: rgb(51,65,85);
+  background-color: var(--header1);
   box-shadow: rgba(24, 24, 27, 0.57) 7px 8px 17px -2px;
 }
 
@@ -152,22 +171,38 @@
 
 .Card > button {
   margin-top: 10px;
+  background-color: var(--main);
+  color: white;
+  border: none;
+  padding: 0.3rem;
+}
+
+.Card > button:hover {
+  background-color: var(--secondButton);
+  color: black;
 }
 
 button {
   width: auto;
   align-self: center;
   font-size: calc(5px + 1vmin);
+  font-family: ibm-plex-serif, sans-serif;
 }
 
 .TopButtonContainer {
-  padding-top: 20px;
+  padding-top: 1rem;
 }
 
 .BottomButtonContainer {
-  padding-bottom: 20px;
+  padding-bottom: 1rem;
 }
 
 .TopButtonContainer > button, .BottomButtonContainer > button {
   margin: 0 10px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--header1);
+  color: white;
+  padding: 0.5rem;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
