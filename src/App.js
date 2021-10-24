@@ -110,12 +110,11 @@ const SearchPage = ({ location }) => {
             <button onClick={() => document.getElementById("dropdownList").classList.toggle("show")} className="dropbtn">Previous Searches ▼</button>
             <div id="dropdownList" className="dropdownList">
               {Object.keys(sessionStorage).map((key, i) => (
-                <button key={i} className="listButtons"
-                        onClick={() => {
-                        setInput(key)
-                        setResults(JSON.parse(sessionStorage.getItem(key)))
-                        document.getElementById("dropdownList").classList.toggle("show")
-                        }}>
+                <button key={i} className="listButtons" onClick={() => {
+                  setInput(key)
+                  setResults(JSON.parse(sessionStorage.getItem(key)))
+                  document.getElementById("dropdownList").classList.toggle("show")
+                }}>
                   {key}
                 </button>
               ))}
@@ -137,6 +136,10 @@ const Search = ({ error, results }) => {
     window.scrollTo(0, 0)
   }, [number])
 
+  useEffect(() => {
+    setNumber(0)
+  }, [results])
+
   if (error) return <div className="ApiError">Too many API Requests</div>
   
   if (results.length === 0) return <div>Please enter a search</div>
@@ -150,7 +153,7 @@ const Search = ({ error, results }) => {
               <source src={result.images.original_mp4.mp4} type="video/mp4" />
             </video>
             <button onClick={() => {navigator.clipboard.writeText(result.url)}}>
-              Click here to copy GIPHY url
+              <strong>Copy GIF</strong>
             </button>
           </li>
         ))}
@@ -171,7 +174,7 @@ const Search = ({ error, results }) => {
               <source src={result.images.original_mp4.mp4} type="video/mp4" />
             </video>
             <button onClick={() => {navigator.clipboard.writeText(result.url)}}>
-              Click here to copy GIPHY url
+              <strong>Copy GIF</strong>
             </button>
           </li>
         ))}
