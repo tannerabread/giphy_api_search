@@ -15,7 +15,8 @@ const App = () => {
   )
 }
 
-
+// declare URL outside of SearchPage so that they are not required as
+//  dependencies in the fetchData callback
 const GIF_URL = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
 const RANDOM_GIF_URL = `https://api.giphy.com/v1/gifs/random?api_key=${process.env.REACT_APP_GIPHY_API_KEY}`
 
@@ -36,6 +37,7 @@ const SearchPage = ({ location }) => {
 
   // fetch search terms asynchronously
   const fetchData = useCallback(async (input) => {
+    // get 3 random gifs
     if (!input) {
       const result = []
       for (let i=0; i<3; i++) {
@@ -47,6 +49,7 @@ const SearchPage = ({ location }) => {
       return
     }
 
+    // get data and check for API limit reached
     const res = await fetch(`${GIF_URL}&q=${input}`)
     if (res.status === 429) {
       console.error("Too many API requests")
@@ -57,8 +60,8 @@ const SearchPage = ({ location }) => {
     setResults(json.data)
     setHistory(input)
 
-    const saveResult = json.data.map(({ id, url, images: { original_mp4: { mp4 } } }) => 
-                                      ({ id, url, images: { original_mp4: { mp4 } } }))
+    // only save json data that is being used into session storage
+    const saveResult = json.data.map(({ id, url, images: { original_mp4: { mp4 } } }) => ({ id, url, images: { original_mp4: { mp4 } } }))
     sessionStorage.setItem(input, JSON.stringify(saveResult))
   }, [])
 
@@ -114,9 +117,7 @@ const SearchPage = ({ location }) => {
                   setInput(key)
                   setResults(JSON.parse(sessionStorage.getItem(key)))
                   document.getElementById("dropdownList").classList.toggle("show")
-                }}>
-                  {key}
-                </button>
+                }}>{key}</button>
               ))}
             </div>
           </div>
