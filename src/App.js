@@ -89,7 +89,7 @@ const SearchPage = ({ location }) => {
     <>
       <div className="App-header">
         <p>
-          Search <a href="https://giphy.com/">GIPHY</a>
+          Search <a href="https://giphy.com/" target="_blank" rel="noreferrer">GIPHY</a>
         </p>
       </div>
       <div className="Container">
