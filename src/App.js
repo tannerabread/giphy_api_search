@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import _ from 'lodash'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Outlet, Link } from 'react-router-dom'
 import './App.css'
 
 
@@ -8,7 +8,17 @@ const App = () => {
   
   return (
     <div className="App">
-      
+      <div className="App-header">
+        <p>
+          Search <a href="https://giphy.com/" target="_blank" rel="noreferrer">GIPHY</a>
+        </p>
+      </div>
+      <nav className="navBar">
+        <Link to="/" className="navLink">Home</Link>
+        <Link to="/searchGifs" className="navLink">Search GIFs</Link>
+        <Link to="/searchStickers" className="navLink">Search Stickers</Link>
+      </nav>
+      <Outlet />
     </div>
   )
 }
@@ -88,11 +98,6 @@ const SearchPage = ({ location }) => {
 
   return (
     <>
-      <div className="App-header">
-        <p>
-          Search <a href="https://giphy.com/" target="_blank" rel="noreferrer">GIPHY</a>
-        </p>
-      </div>
       <div className="Container">
         <div className="InputContainer">
           <form onSubmit={() => fetchData(input)}>  
