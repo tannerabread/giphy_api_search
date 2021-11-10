@@ -8,9 +8,7 @@ const App = () => {
   
   return (
     <div className="App">
-      <Router>
-        <Route path="/" component={SearchPage} />
-      </Router>
+      
     </div>
   )
 }
