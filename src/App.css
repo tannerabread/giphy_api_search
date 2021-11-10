@@ -33,6 +33,15 @@
   border-bottom: 2px solid white;
 }
 
+.navLink {
+  color: white;
+  margin: 0 10px;
+}
+
+.searchHeader {
+  color: pink;
+}
+
 .Container {
   min-height: 90vh;
   padding: 0 0.5rem;
