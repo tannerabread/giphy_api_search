@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import { getTranslateGifs, getTranslateStickers } from '../utilities/getData'
 
-export default function TranslateResults({ searchParams, type, weirdness }) {
+export default function TranslateResults({ query, type, weirdness }) {
   const [data, setData] = useState()
   const [error, setError] = useState()
-  console.log('searchParams', searchParams)
 
   useEffect(() => {
     async function getData() {
       try {
-        const res = await getTranslateGifs(searchParams)
+        const res = await getTranslateGifs(query)
         console.log('res', res)
         setData(res)
       } catch(error) {
@@ -19,7 +18,7 @@ export default function TranslateResults({ searchParams, type, weirdness }) {
     }
 
     getData()
-  }, [searchParams])
+  }, [query])
 
   return(
     <div>

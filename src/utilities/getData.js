@@ -64,16 +64,18 @@ async function getTrendingStickers({ limit, offset, rating }) {
 }
 
 // get translate gifs
-async function getTranslateGifs(searchTerm, weirdness) {
-  const url=`${BASE_URL}/gifs/translate?${API_STRING}`
-  const searchUrl = `${url}&s=${searchTerm}&weirdness=${weirdness}`
-  return await fetchData(searchUrl)
+async function getTranslateGifs({ query, weirdness }) {
+  const base_url=`${BASE_URL}/gifs/translate?${API_STRING}`
+  let url = `${base_url}&s=${query}`
+  if (weirdness) url += `&weirdness=${weirdness}`
+  return await fetchData(url)
 }
 
 // get translate stickers
-async function getTranslateStickers(searchTerm, weirdness) {
+async function getTranslateStickers({ query, weirdness }) {
   const url=`${BASE_URL}/stickers/translate?${API_STRING}`
-  const searchUrl = `${url}&s=${searchTerm}&weirdness=${weirdness}`
+  let searchUrl = `${url}&s=${query}`
+  if (weirdness) searchUrl += `&weirdness=${weirdness}`
   return await fetchData(searchUrl)
 }
 
@@ -93,9 +95,8 @@ module.exports = {
 }
 
 // helper functions
-async function fetchData({ url }) {
+async function fetchData(url) {
   const res = await fetch(url)
   const json = await res.json()
-
   return { data: json.data, meta: json.meta }
 }
